@@ -33,6 +33,15 @@ app.use('/api/profile', profileRoutes); // Add profile routes
 // Test route
 app.get('/', (req, res) => res.send('API is running...'));
 
-// Start the server
-const PORT = process.env.PORT || 5000;
+// Handle unknown routes
+app.use((req, res) => res.status(404).json({ message: 'Route not found' }));
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Server error' });
+});
+
+// Ensure the port is properly defined
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
