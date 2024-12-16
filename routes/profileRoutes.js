@@ -1,50 +1,15 @@
-// controllers/profileController.js
-const User = require('../models/User'); // Assuming you have a User model
+// routes/profileRoutes.js
+const express = require('express');
+const { getProfile, updateProfile } = require('../controllers/profileController'); // Import controller functions
+const { authenticateToken } = require('../middleware/authMiddleware'); // Import the middleware
 
-// Get Profile
-const getProfile = async (req, res) => {
-    try {
-        // Fetch the user profile using the user ID from the decoded token
-        const user = await User.findById(req.user.id); // req.user comes from the middleware
+const router = express.Router();
 
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
+// Get Profile - Protected route
+router.get('/', authenticateToken, getProfile);
 
-        res.json({
-            id: user._id,
-            username: user.username,
-            email: user.email,
-            // add any other fields you want to return
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Server error' });
-    }
-};
+// Update Profile - Protected route
+router.put('/', authenticateToken, updateProfile);
 
-// Update Profile
-const updateProfile = async (req, res) => {
-    try {
-        // Find user and update their profile
-        const user = await User.findByIdAndUpdate(req.user.id, req.body, { new: true });
+module.exports = router; // Export the router correctly
 
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        res.json({
-            message: 'Profile updated successfully',
-            user: {
-                id: user._id,
-                username: user.username,
-                email: user.email,
-            }
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Server error' });
-    }
-};
-
-module.exports = { getProfile, updateProfile };
