@@ -1,8 +1,10 @@
 {
   "name": "auth-backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",  // Change to 'server.js' if that’s the correct entry point
   "scripts": {
+    "start": "node server.js",  // This will be used by Railway
+    "dev": "npx nodemon server.js",  // This is for local development
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
